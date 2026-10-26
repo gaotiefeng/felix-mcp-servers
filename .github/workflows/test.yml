@@ -1,0 +1,20 @@
+name: MCP Tests
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ['3.11', '3.14']
+    defaults:
+      run:
+        working-directory: servers/felix-notify-bot-mcp
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: ${{ matrix.python }}
+      - run: uv sync --locked
+      - run: uv run --locked pytest
